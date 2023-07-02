@@ -213,6 +213,24 @@ services:
     networks:
       - local-network
 
+  odoo:
+    container_name: udinus-odoo
+    image: odoo:16.0
+    depends_on:
+      - db
+    ports:
+      - "9995:8069"
+    networks:
+      - local-network
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    networks:
+      - local-network
+
 volumes:
   pgdata_udinus_keycloak:
   data_mysql:
