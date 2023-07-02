@@ -230,11 +230,47 @@ services:
       - POSTGRES_USER=odoo
     networks:
       - local-network
+  
+  mariadb:
+    container_name: udinus-mariadb
+    image: bitnami/mariadb:latest
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      MARIADB_USER: udinus
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: db_moodle
+    ports:
+      - "9998:3306"
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+      # - /path/to/mariadb-persistence:/bitnami/mariadb
+    networks:
+      - local-network
+  moodle:
+    container_name: udinus-moodle
+    image: bitnami/moodle:latest
+    ports:
+      - "9996:8080"
+      - "9999:8443"
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      MOODLE_DATABASE_USER: udinus
+      MOODLE_DATABASE_PASSWORD: password
+      MOODLE_DATABASE_NAME: db_moodle
+    volumes:
+       - 'moodle_data:/bitnami/moodle'
+      #  - /path/to/moodle-persistence:/bitnami/moodle
+    networks:
+      - local-network
 
 volumes:
   pgdata_udinus_keycloak:
   data_mysql:
   wordpress:
+  mariadb_data:
+    driver: local
+  moodle_data:
+    driver: local
 networks:
   local-network:
     driver: bridge
