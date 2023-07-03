@@ -1,153 +1,9 @@
-# version: "3"
-# services:
-#   dbmysql:
-#     container_name: db-mysql
-#     image: mysql:5.7
-#     restart: always
-#     ports:
-#       - 8001:3306
-#     environment:
-#       - MYSQL_ROOT_PASSWORD=S3cur3rootmysql
-#       - MYSQL_DATABASE=mysql
-#       - MYSQL_USER=arif
-#       - MYSQL_PASSWORD=S3cur3mysql
-#     volumes:
-#       - mysql_data:/var/lib/mysql
-#     networks:
-#       - local-network
-
-#   dbpostgres:
-#     container_name: db-postgres
-#     image: postgres:15
-#     restart: always
-#     ports:
-#       - 8002:5432
-#     environment:
-#       - POSTGRES_DB=postgres
-#       - POSTGRES_PASSWORD=S3cur3postgres
-#       - POSTGRES_USER=arif
-#     volumes:
-#       - postgres_data:/var/lib/postgresql/data
-#     networks:
-#       - local-network
-
-#   mariadb:
-#     container_name: maria-db
-#     image: mariadb:latest
-#     restart: always
-#     volumes:
-#       - moodle_data:/var/lib/mysql
-#     ports:
-#       - 8003:3306
-#     environment:
-#       - MYSQL_ROOT_PASSWORD=S3cur3rootmariadb
-#       - MYSQL_DATABASE=mariadb
-#       - MYSQL_USER=arif
-#       - MYSQL_PASSWORD=S3cur3mariadb
-#     networks:
-#       - local-network
-
-#   keycloak:
-#     container_name: keycloak-udinus
-#     image: quay.io/keycloak/keycloak:latest
-#     restart: always
-#     ports:
-#       - 8080:8080
-#     environment:
-#       - KEYCLOAK_USER=arif
-#       - KEYCLOAK_PASSWORD=S3cur3keycloak
-#       - DB_VENDOR=mysql
-#       - DB_ADDR=mysql
-#       - DB_PORT=8001
-#       - DB_DATABASE=db_keycloak
-#       - DB_USER=arif
-#       - DB_PASSWORD=S3cur3mysql
-#     depends_on:
-#       - dbmysql
-#     networks:
-#       - local-network
-
-#   wordpress:
-#     container_name: wordpress-udinus
-#     image: wordpress:latest
-#     restart: always
-#     ports:
-#       - 8020:80
-#     environment:
-#       - WORDPRESS_DB_HOST=dbmysql:8001
-#       - WORDPRESS_DB_USER=arif
-#       - WORDPRESS_DB_PASSWORD=S3cur3mysql
-#       - WORDPRESS_DB_NAME=db_wordpress
-#     depends_on:
-#       - dbmysql
-#     networks:
-#       - local-network
-
-#   odoo:
-#     container_name: odoo-udinus
-#     image: odoo:16.0
-#     restart: always
-#     ports:
-#       - 8030:8069
-#     depends_on:
-#       - dbpostgres
-#     networks:
-#       - local-network
-
-#   moodle:
-#     container_name: moodle-udinus
-#     image: moodlehq/moodleapp:latest-dev
-#     restart: always
-#     ports:
-#       - 8040:80
-#     environment:
-#       - MOODLE_DB_TYPE=mysqli
-#       - MOODLE_DB_HOST=mysql
-#       - MOODLE_DB_PORT=8003
-#       - MOODLE_DB_USER=arif
-#       - MOODLE_DB_PASSWORD=S3cur3mariadb
-#       - MOODLE_DB_NAME=db_moodle
-#     depends_on:
-#       - mariadb
-#     networks:
-#       - local-network
-
-  # dspace:
-  #   container_name: dspace-udinus
-  #   image: dspace/dspace:6.4
-  #   restart: always
-  #   ports:
-  #     - 8050:8080
-  #   environment:
-  #     - DSPACE_DB_HOST=dbpostgres
-  #     - DSPACE_DB_PORT=8002
-  #     - DSPACE_DB_NAME=db_dspace
-  #     - DSPACE_DB_USERNAME=arif
-  #     - DSPACE_DB_PASSWORD=S3cur3postgres
-  #     - DSPACE_HOSTNAME=http://localhost:8050
-  #   volumes:
-  #     - ./dspace/config/local.cfg:/dspace/config/local.cfg
-  #     - ./dspace/assetstore:/dspace/assetstore
-  #     - ./dspace/solr:/dspace/solr
-  #   depends_on:
-  #     - dbpostgres
-  #   networks:
-  #     - local-network
-  
-# networks:
-#   local-network:
-
-# volumes:
-#   mysql_data:
-#   postgres_data:
-#   moodle_data:
-
 services:
   db_postgres:
     container_name: udinus-postgres
     image: postgres:15.3
     command: postgres -c 'max_connections=200'
-    volumes: 
+    volumes:
       - pgdata_udinus_keycloak:/var/lib/postgres/data
     environment:
       POSTGRES_DB: db_keycloak
@@ -159,7 +15,7 @@ services:
       - "9991:5432"
     networks:
       - local-network
-  
+
   db_mysql:
     container_name: udinus-mysql
     image: mysql:5.7
@@ -168,7 +24,7 @@ services:
       MYSQL_DATABASE: db_wordpress
       MYSQL_USER: udinus
       MYSQL_PASSWORD: password
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
     ports:
       - "9992:3306"
     volumes:
@@ -230,7 +86,7 @@ services:
       - POSTGRES_USER=odoo
     networks:
       - local-network
-  
+
   mariadb:
     container_name: udinus-mariadb
     image: bitnami/mariadb:latest
@@ -242,7 +98,7 @@ services:
     ports:
       - "9998:3306"
     volumes:
-      - 'mariadb_data:/bitnami/mariadb'
+      - "mariadb_data:/bitnami/mariadb"
       # - /path/to/mariadb-persistence:/bitnami/mariadb
     networks:
       - local-network
@@ -258,7 +114,7 @@ services:
       MOODLE_DATABASE_PASSWORD: password
       MOODLE_DATABASE_NAME: db_moodle
     volumes:
-       - 'moodle_data:/bitnami/moodle'
+      - "moodle_data:/bitnami/moodle"
       #  - /path/to/moodle-persistence:/bitnami/moodle
     networks:
       - local-network
