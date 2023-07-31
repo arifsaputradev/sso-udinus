@@ -1,0 +1,65 @@
+services:
+  db_postgres:
+    container_name: udinus-postgres-keycloak
+    image: postgres:15.3
+    command: postgres -c 'max_connections=200'
+    volumes:
+      - pgdata_udinus_keycloak:/var/lib/postgres/data
+    environment:
+      POSTGRES_DB: db_keycloak
+      POSTGRES_USER: udinus
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - "8881:5432"
+    networks:
+      - local-network-2
+
+  keycloak:
+    container_name: udinus-keycloak-oauth
+    image: quay.io/keycloak/keycloak:21.0
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: udinus-postgres
+      KC_DB_URL_DATABASE: db_keycloak
+      KC_DB_PASSWORD: password
+      KC_DB_USERNAME: udinus
+      KC_DB_SCHEMA: public
+      KEYCLOAK_ADMIN: udinus
+      KEYCLOAK_ADMIN_PASSWORD: password
+    ports:
+      - "8882:8080"
+    depends_on:
+      db_postgres:
+        condition: service_healthy
+    networks:
+      - local-network-2
+
+  odoo:
+    container_name: udinus-odoo-oauth
+    image: odoo:16.0
+    depends_on:
+      - db
+    ports:
+      - "8883:8069"
+    networks:
+      - local-network-2
+  db:
+    container_name: udinus-postgres-odoo
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    ports:
+      - "8884:5432"
+    networks:
+      - local-network-2
+  
+volumes:
+  pgdata_udinus_keycloak:
+networks:
+  local-network-2:
+    driver: bridge
