@@ -22,7 +22,7 @@ services:
     command: start-dev
     environment:
       KC_DB: postgres
-      KC_DB_URL_HOST: udinus-postgres
+      KC_DB_URL_HOST: udinus-postgres-keycloak
       KC_DB_URL_DATABASE: db_keycloak
       KC_DB_PASSWORD: password
       KC_DB_USERNAME: udinus
