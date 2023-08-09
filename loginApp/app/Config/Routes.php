@@ -34,6 +34,9 @@ $routes->get('/', 'Home::index');
 $routes->post('api/register', 'Api::register');
 $routes->post('api/login', 'Api::login');
 
+$routes->get('/register', 'Auth::register');
+$routes->get('/login', 'Auth::login');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
