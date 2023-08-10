@@ -37,6 +37,9 @@ $routes->post('api/login', 'Api::login');
 $routes->get('/register', 'Auth::register');
 $routes->get('/login', 'Auth::login');
 
+$routes->get('/home', 'Home::home', ['filter' => 'auth']);
+$routes->get('/logout', 'Home::logout', ['filter' => 'auth']);
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

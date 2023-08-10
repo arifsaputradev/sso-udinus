@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
+use Config\Session;
 
 class Api extends BaseController
 {
@@ -26,12 +27,22 @@ class Api extends BaseController
 
     public function login()
     {
+        $session = session();
+
         $model = new UserModel();
 
         $username = $this->request->getVar('username');
         $password = $this->request->getVar('password');
 
         $user = $model->where('username', $username)->first();
+
+        $ses_data = [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'isLoggedIn' => TRUE
+        ];
+ 
+        $session->set($ses_data);
 
         if ($user && password_verify($password, $user['password'])) {
             return $this->respond(['message' => 'Login successful']);

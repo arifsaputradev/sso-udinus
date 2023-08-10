@@ -14,7 +14,7 @@
         <!-- Button Register -->
         <button type="submit">Register</button>
     </form>
-    <p class="text">Sudah memiliki akun? <a href="#">Login</a></p>
+    <p class="text">Have an account already? <a href="<?= site_url('login') ?>">Login</a></p>
     <p class="or">Or</p>
     <form id="registerWithSSO">
         <!-- Register with Udinus -->
@@ -44,10 +44,10 @@
                         password: password
                     },
                     success: function(response) {
-                        $('#message').text('Registration successful');
+                        window.location.href = '/login';
                     },
                     error: function(xhr, status, error) {
-                        $('#message').text('Registration failed');
+                        alert('Registration failed!');
                     }
                 });
             });

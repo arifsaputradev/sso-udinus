@@ -8,4 +8,15 @@ class Home extends BaseController
     {
         return view('welcome_message');
     }
+    
+    public function home() 
+    {
+        return view('home');
+    }
+
+    public function logout() 
+    {
+        session_destroy();
+        return redirect()->to('/login');
+    }
 }

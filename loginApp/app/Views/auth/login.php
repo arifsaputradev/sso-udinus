@@ -10,16 +10,13 @@
         <!-- Button Login -->
         <button type="submit">Login</button>
     </form>
-    <p class="text">Belum memiliki akun? <a href="#">Register</a></p>
+    <p class="text">Haven't registered yet? <a href="<?= site_url('register') ?>">Register</a></p>
     <p class="or">Or</p>
     <form id="loginWithSSO">
         <!-- Register with Udinus -->
         <!-- Button Register -->
         <button type="submit" class="sso">Login with Udinus</button>
     </form>
-
-    <div id="message"></div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -37,10 +34,10 @@
                         password: password
                     },
                     success: function(response) {
-                        $('#message').text('Login successful');
+                        window.location.href = '/home';
                     },
                     error: function(xhr, status, error) {
-                        $('#message').text('Login failed');
+                        alert('Login failed!');
                     }
                 });
             });
