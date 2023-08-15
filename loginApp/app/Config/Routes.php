@@ -34,11 +34,14 @@ $routes->get('/', 'Home::index');
 $routes->post('api/register', 'Api::register');
 $routes->post('api/login', 'Api::login');
 
-$routes->get('/register', 'Auth::register');
-$routes->get('/login', 'Auth::login');
+$routes->get('/register', 'AuthController::register');
+$routes->get('/login', 'AuthController::login');
 
 $routes->get('/home', 'Home::home', ['filter' => 'auth']);
 $routes->get('/logout', 'Home::logout', ['filter' => 'auth']);
+
+$routes->get('sso/ssoLogin', 'Sso::ssoLogin');
+$routes->post('sso/acs', 'Sso::ssoAcs');
 
 /*
  * --------------------------------------------------------------------
