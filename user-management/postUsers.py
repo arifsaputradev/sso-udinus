@@ -17,10 +17,10 @@ password = os.getenv('PASSWORD')
 # creating token payload
 token_url = f"{keycloak_url}/realms/master/protocol/openid-connect/token"
 payload = {
-    "username":user_keycloak,
-    "password":password,
-    "client_id":client_id,
-    "grant_type":"password"
+    "username": user_keycloak,
+    "password": password,
+    "client_id": client_id,
+    "grant_type": "password"
 }
 
 # requesting an access token
@@ -33,7 +33,7 @@ with open('./test-data/SSO-Users1.csv', 'r') as csvfile:
     # looping through rows and creating users
     for row in reader:
         user_url = f"{keycloak_url}/admin/realms/{realm}/users"
-        # preaparing headers and user data
+        # preparing headers and user data
         headers = {
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json"
@@ -50,5 +50,22 @@ with open('./test-data/SSO-Users1.csv', 'r') as csvfile:
         # processing response
         if response.status_code == 201:
             print(f"User {row['username']} created successfully")
+            
+            # Extract user ID from the Location header
+            location_header = response.headers.get('Location')
+            if location_header:
+                user_id = location_header.split('/')[-1]  # Extract the user ID from the URL
+                password_url = f"{user_url}/{user_id}/reset-password"
+                password_payload = {
+                    "type": "password",
+                    "value": "password"
+                }
+                password_response = requests.put(password_url, json=password_payload, headers=headers)
+                if password_response.status_code == 204:
+                    print(f"Password set for user {row['username']}")
+                else:
+                    print(f"Error setting password for user {row['username']}: {password_response.status_code}")
+            else:
+                print(f"Error extracting user ID from response header")
         else:
             print(f"Error creating user {row['username']}: {response.status_code}")
