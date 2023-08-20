@@ -28,7 +28,7 @@ response = requests.post(token_url, data=payload)
 access_token = response.json()["access_token"]
 
 # read and import users from csv file
-with open('./test-data/SSO-Users1.csv', 'r') as csvfile:
+with open('./test-data/SSO-Users2.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
     # looping through rows and creating users
     for row in reader:
@@ -58,7 +58,7 @@ with open('./test-data/SSO-Users1.csv', 'r') as csvfile:
                 password_url = f"{user_url}/{user_id}/reset-password"
                 password_payload = {
                     "type": "password",
-                    "value": "password"
+                    "value": row['password']
                 }
                 password_response = requests.put(password_url, json=password_payload, headers=headers)
                 if password_response.status_code == 204:
