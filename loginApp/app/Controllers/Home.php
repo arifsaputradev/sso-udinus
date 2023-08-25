@@ -19,4 +19,9 @@ class Home extends BaseController
         session_destroy();
         return redirect()->to('/login');
     }
+
+    public function homeSSO() 
+    {
+        return view('home_sso');
+    }
 }

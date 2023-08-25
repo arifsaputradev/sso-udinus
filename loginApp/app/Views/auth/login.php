@@ -14,8 +14,10 @@
     <p class="or">Or</p>
     <form id="loginWithSSO">
         <!-- Register with Udinus -->
-        <!-- Button Register -->
-        <button type="submit" class="sso">Login with Udinus</button>
+        <!-- Button Login -->
+        <!-- <a href="<?= site_url('ssoLogin') ?>"><button type="submit" class="sso">Login with Udinus</button></a> -->
+        <button type="button" class="sso" onclick="window.location.href='<?= site_url('sso/ssoLogin') ?>'">Login with Udinus</button>
+        <button type="button" class="sso" onclick="window.location.href='<?= site_url('auth/google') ?>'">Login with Google</button>
     </form>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

@@ -39,9 +39,15 @@ $routes->get('/login', 'AuthController::login');
 
 $routes->get('/home', 'Home::home', ['filter' => 'auth']);
 $routes->get('/logout', 'Home::logout', ['filter' => 'auth']);
+$routes->get('/home-sso', 'Home::homeSSO');
 
 $routes->get('sso/ssoLogin', 'Sso::ssoLogin');
+$routes->get('sso/sp', 'Sso::sp');
 $routes->post('sso/acs', 'Sso::ssoAcs');
+$routes->get('sso/slo', 'Sso::ssoSlo');
+
+$routes->get('auth/google', 'Sso::googleLogin');
+$routes->get('auth/google/callback', 'Sso::googleCallback');
 
 /*
  * --------------------------------------------------------------------
@@ -51,7 +57,49 @@ $routes->post('sso/acs', 'Sso::ssoAcs');
  * There will often be times that you need additional routing and you
  * need it to be able to override any defaults in this file. Environment
  * based routes is one such time. require() additional route files here
- * to make that happen.
+ * to make that happen.public function googleLogin()
+    {
+        helper('url');
+        $client = new \Google_Client();
+        $client->setClientId(getenv('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(getenv('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(getenv('GOOGLE_REDIRECT_URI'));
+        $client->addScope('email');
+        $client->addScope('profile');
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+        $client->setIncludeGrantedScopes(true);
+
+        return redirect()->to($client->createAuthUrl());
+    }
+
+    public function googleCallback()
+    {
+        helper('url');
+        $client = new \Google_Client();
+        $client->setClientId(getenv('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(getenv('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(getenv('GOOGLE_REDIRECT_URI'));
+        $client->addScope('email');
+        $client->addScope('profile');
+        $client->setAccessType('offline');
+        $client->setIncludeGrantedScopes(true);
+
+        if ($this->request->getVar('code')) {
+            $token = $client->fetchAccessTokenWithAuthCode($this->request->getVar('code'));
+            $client->setAccessToken($token);
+
+            if ($client->isAccessTokenExpired()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+            }
+
+            $google_oauth = new \Google_Service_Oauth2($client);
+            $google_account_info = $google_oauth->userinfo->get();
+
+            // Lakukan sesuatu dengan data akun Google yang diterima
+            var_dump($google_account_info);
+        }
+    }
  *
  * You will have access to the $routes object within that file without
  * needing to reload it.
